@@ -17,5 +17,3 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
   parameter inputs instead of typing method names by hand.
 - RPC helpers (`src/rpc.ts`): `invokeFunction` and `getContractState`, with
   error handling and typed results.
-- Jest test suite covering the RPC helpers, the invoke/ABI core, and the webview
-  message handlers / HTML generation.
