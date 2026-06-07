@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export { DEFAULT_RPC_ENDPOINTS } from "../shared/networks";
+export { RPC_ENDPOINTS, primaryEndpoint } from "../shared/networks";
+export type { BuiltInNetwork, NetworkId } from "../shared/networks";
 
 /**
  * Shape of a Neo `invokefunction` result (the `result` field of the JSON-RPC

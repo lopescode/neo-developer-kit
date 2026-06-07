@@ -2,7 +2,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "../router";
 import { onMessage, postMessage } from "../vscode";
 import type { ExtensionMessage, InvokeResult, Method } from "../messages";
-import { DEFAULT_RPC_ENDPOINTS } from "../../shared/networks";
+import {
+  primaryEndpoint,
+  type NetworkId,
+} from "../../shared/networks";
 import { Button } from "../components/Button";
 import { TextInput } from "../components/TextInput";
 import { Field } from "../components/Field";
@@ -12,7 +15,8 @@ import type { StatusValue } from "../components/Status";
 export function TestInvoke() {
   const { navigate } = useRouter();
 
-  const [rpc, setRpc] = useState(DEFAULT_RPC_ENDPOINTS.testnet);
+  const [network, setNetwork] = useState<NetworkId>("testnet");
+  const [customRpc, setCustomRpc] = useState("");
   const [contract, setContract] = useState("");
   const [methods, setMethods] = useState<Method[]>([]);
   const [selected, setSelected] = useState(0);
@@ -22,6 +26,9 @@ export function TestInvoke() {
   const [result, setResult] = useState<InvokeResult | null>(null);
 
   const method = methods[selected] as Method | undefined;
+
+  // Effective endpoint: the network's primary node, or the custom URL.
+  const rpc = network === "custom" ? customRpc : primaryEndpoint(network);
 
   const prettyResult = useMemo(
     () => (result ? JSON.stringify(result, null, 2) : ""),
@@ -118,22 +125,27 @@ export function TestInvoke() {
         Read-only <code>invokefunction</code> against a Neo N3 node.
       </p>
 
-      <Field label="RPC endpoint">
-        <TextInput value={rpc} onChange={(e) => setRpc(e.target.value)} />
-        <div className="flex gap-3 mt-1 text-[0.8em]">
-          <button
-            className="text-[var(--vscode-textLink-foreground)] hover:underline"
-            onClick={() => setRpc(DEFAULT_RPC_ENDPOINTS.testnet)}
-          >
-            TestNet
-          </button>
-          <button
-            className="text-[var(--vscode-textLink-foreground)] hover:underline"
-            onClick={() => setRpc(DEFAULT_RPC_ENDPOINTS.mainnet)}
-          >
-            MainNet
-          </button>
-        </div>
+      <Field label="Network">
+        <select
+          value={network}
+          onChange={(e) => setNetwork(e.target.value as NetworkId)}
+          className="bg-[var(--vscode-input-background)] px-2 py-1.5 border border-[var(--vscode-input-border,transparent)] rounded focus:outline outline-none focus:outline-[var(--vscode-focusBorder)] focus:outline-1 w-full text-[var(--vscode-input-foreground)]"
+        >
+          <option value="testnet">TestNet</option>
+          <option value="mainnet">MainNet</option>
+          <option value="custom">Custom…</option>
+        </select>
+        {network === "custom" ? (
+          <div className="mt-1.5">
+            <TextInput
+              value={customRpc}
+              placeholder="https://your-node:443"
+              onChange={(e) => setCustomRpc(e.target.value)}
+            />
+          </div>
+        ) : (
+          <div className="opacity-70 mt-1 text-[0.78em] break-all">{rpc}</div>
+        )}
       </Field>
 
       <Field label="Contract hash">
