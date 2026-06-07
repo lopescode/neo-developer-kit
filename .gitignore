@@ -1,0 +1,10 @@
+out
+dist
+node_modules
+.vscode-test/
+*.vsix
+
+# Generated webview bundles
+media/js/webview.js
+media/js/webview.js.map
+media/css/tailwind.css

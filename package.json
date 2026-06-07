@@ -1,0 +1,74 @@
+{
+  "name": "neo-developer-kit",
+  "displayName": "neo-developer-kit",
+  "description": "Build faster on Neo. The Neo Developer Kit bundles powerful development tools, project templates, deployment utilities, and blockchain integrations into a single package, helping developers go from idea to production with minimal friction.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.94.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "neo-developer-kit",
+          "title": "Neo Developer Kit",
+          "icon": "media/neo.png"
+        }
+      ]
+    },
+    "views": {
+      "neo-developer-kit": [
+        {
+          "id": "neo.kitView",
+          "type": "webview",
+          "name": "Tools"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "neo.openPanel",
+        "title": "Neo: Open Developer Kit"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "yarn run package",
+    "compile": "yarn run check-types && yarn run lint && node esbuild.js && yarn run build:css",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:css": "tailwindcss -i ./src/webview/styles.css -o ./media/css/tailwind.css --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "yarn run check-types && yarn run lint && node esbuild.js --production && yarn run build:css",
+    "build:css": "tailwindcss -i ./src/webview/styles.css -o ./media/css/tailwind.css --minify",
+    "pretest": "yarn run check-types && yarn run lint",
+    "check-types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.webview.json",
+    "lint": "eslint src",
+    "test": "jest"
+  },
+  "dependencies": {
+    "axios": "^1.17.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/node": "^25.9.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@types/vscode": "^1.94.0",
+    "esbuild": "^0.27.3",
+    "eslint": "^9.39.3",
+    "jest": "^30.4.2",
+    "npm-run-all": "^4.1.5",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tailwindcss": "^3.4.0",
+    "ts-jest": "^29.4.11",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  }
+}
