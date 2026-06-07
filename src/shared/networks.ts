@@ -23,6 +23,11 @@ export function primaryEndpoint(network: BuiltInNetwork): string {
   return RPC_ENDPOINTS[network][0];
 }
 
+/** Resolves the effective endpoint URL for a selected network + custom input. */
+export function resolveEndpoint(network: NetworkId, customRpc: string): string {
+  return network === "custom" ? customRpc : primaryEndpoint(network);
+}
+
 /**
  * Back-compat alias: the single default endpoint per built-in network.
  * @deprecated Prefer {@link RPC_ENDPOINTS} / {@link primaryEndpoint}.

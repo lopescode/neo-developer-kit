@@ -2,13 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "../router";
 import { onMessage, postMessage } from "../vscode";
 import type { ExtensionMessage, InvokeResult, Method } from "../messages";
-import {
-  primaryEndpoint,
-  type NetworkId,
-} from "../../shared/networks";
+import { resolveEndpoint, type NetworkId } from "../../shared/networks";
 import { Button } from "../components/Button";
 import { TextInput } from "../components/TextInput";
 import { Field } from "../components/Field";
+import { NetworkSelect } from "../components/NetworkSelect";
 import { Status } from "../components/Status";
 import type { StatusValue } from "../components/Status";
 
@@ -28,7 +26,7 @@ export function TestInvoke() {
   const method = methods[selected] as Method | undefined;
 
   // Effective endpoint: the network's primary node, or the custom URL.
-  const rpc = network === "custom" ? customRpc : primaryEndpoint(network);
+  const rpc = resolveEndpoint(network, customRpc);
 
   const prettyResult = useMemo(
     () => (result ? JSON.stringify(result, null, 2) : ""),
@@ -125,28 +123,12 @@ export function TestInvoke() {
         Read-only <code>invokefunction</code> against a Neo N3 node.
       </p>
 
-      <Field label="Network">
-        <select
-          value={network}
-          onChange={(e) => setNetwork(e.target.value as NetworkId)}
-          className="bg-[var(--vscode-input-background)] px-2 py-1.5 border border-[var(--vscode-input-border,transparent)] rounded focus:outline outline-none focus:outline-[var(--vscode-focusBorder)] focus:outline-1 w-full text-[var(--vscode-input-foreground)]"
-        >
-          <option value="testnet">TestNet</option>
-          <option value="mainnet">MainNet</option>
-          <option value="custom">Custom…</option>
-        </select>
-        {network === "custom" ? (
-          <div className="mt-1.5">
-            <TextInput
-              value={customRpc}
-              placeholder="https://your-node:443"
-              onChange={(e) => setCustomRpc(e.target.value)}
-            />
-          </div>
-        ) : (
-          <div className="opacity-70 mt-1 text-[0.78em] break-all">{rpc}</div>
-        )}
-      </Field>
+      <NetworkSelect
+        network={network}
+        onNetworkChange={setNetwork}
+        customRpc={customRpc}
+        onCustomRpcChange={setCustomRpc}
+      />
 
       <Field label="Contract hash">
         <div className="flex gap-1.5">

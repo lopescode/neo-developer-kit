@@ -12,6 +12,23 @@ export interface Method {
   parameters: MethodParam[];
 }
 
+/** A public, webview-safe account (never contains key material). */
+export interface WalletAccount {
+  address: string;
+  label: string;
+  isActive: boolean;
+}
+
+/** A formatted NEP-17 token balance for display. */
+export interface TokenBalance {
+  symbol: string;
+  amount: string;
+  /** Contract script hash (`0x…`) — the only reliable token identity. */
+  hash: string;
+  /** True only for canonical native NEO/GAS; others can impersonate symbols. */
+  trusted: boolean;
+}
+
 /** Messages the webview sends to the extension. */
 export type WebviewMessage =
   | { type: "loadAbi"; rpc: string; contract: string }
@@ -21,7 +38,14 @@ export type WebviewMessage =
       contract: string;
       method: string;
       params: string;
-    };
+    }
+  | { type: "wallet.list" }
+  | { type: "wallet.create" }
+  | { type: "wallet.import" }
+  | { type: "wallet.setActive"; address: string }
+  | { type: "wallet.remove"; address: string }
+  | { type: "wallet.backup" }
+  | { type: "wallet.balance"; address: string; rpc: string };
 
 /** The VM result returned by a read-only invocation. */
 export interface InvokeResult {
@@ -37,4 +61,10 @@ export type ExtensionMessage =
   | { type: "abi"; ok: true; name: string; hash: string; methods: Method[] }
   | { type: "abi"; ok: false; error: string }
   | { type: "result"; ok: true; result: InvokeResult }
-  | { type: "result"; ok: false; error: string };
+  | { type: "result"; ok: false; error: string }
+  | { type: "wallet.accounts"; ok: true; accounts: WalletAccount[] }
+  | { type: "wallet.accounts"; ok: false; error: string }
+  | { type: "wallet.backup"; ok: true; path: string }
+  | { type: "wallet.backup"; ok: false; error: string }
+  | { type: "wallet.balance"; ok: true; address: string; assets: TokenBalance[] }
+  | { type: "wallet.balance"; ok: false; address: string; error: string };

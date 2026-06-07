@@ -1,14 +1,7 @@
 import { useRouter } from "../router";
+import { OptionGrid, type Option } from "../components/OptionGrid";
 
-interface Tool {
-  id: string;
-  icon: string;
-  title: string;
-  desc: string;
-  enabled: boolean;
-}
-
-const TOOLS: Tool[] = [
+const TOOLS: Option[] = [
   {
     id: "invoke",
     icon: "▶",
@@ -28,7 +21,7 @@ const TOOLS: Tool[] = [
     icon: "◎",
     title: "Wallet",
     desc: "Manage accounts and sign transactions.",
-    enabled: false,
+    enabled: true,
   },
 ];
 
@@ -40,33 +33,7 @@ export function Home() {
       <h2 className="font-semibold text-base">Neo Developer Kit</h2>
       <p className="opacity-70 mb-3 text-xs">Pick a tool to get started.</p>
 
-      <div className="flex flex-col gap-2">
-        {TOOLS.map((tool) => (
-          <button
-            key={tool.id}
-            disabled={!tool.enabled}
-            onClick={() => navigate(tool.id)}
-            className="flex gap-2.5 bg-[var(--vscode-editorWidget-background,rgba(127,127,127,0.08))] disabled:opacity-50 p-3 border border-[var(--vscode-widget-border,transparent)] enabled:hover:border-[var(--vscode-focusBorder)] rounded-md text-left disabled:cursor-default"
-          >
-            <span className="text-lg leading-none">{tool.icon}</span>
-
-            <span className="flex-1">
-              <span className="font-semibold">
-                {tool.title}
-                {!tool.enabled && (
-                  <span className="bg-[var(--vscode-badge-background)] ml-1.5 px-1.5 py-0.5 rounded-full text-[0.7em] text-[var(--vscode-badge-foreground)]">
-                    soon
-                  </span>
-                )}
-              </span>
-
-              <span className="block opacity-75 mt-0.5 text-xs">
-                {tool.desc}
-              </span>
-            </span>
-          </button>
-        ))}
-      </div>
+      <OptionGrid options={TOOLS} onSelect={navigate} />
     </section>
   );
 }

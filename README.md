@@ -13,6 +13,7 @@ utilities, and blockchain integrations into a single VS Code package.
 ## Features
 
 - **[Test Invoke](docs/test-invoke.md)**
+- **[Wallet](docs/wallet.md)**
 
 ## How it works
 

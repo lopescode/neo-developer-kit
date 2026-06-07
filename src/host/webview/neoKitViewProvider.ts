@@ -1,41 +1,71 @@
 import * as vscode from "vscode";
-import { ContractInput, InvokeInput } from "../invoke";
-import { buildAbiResponse, buildInvokeResponse } from "./messageHandlers";
+import { Contract } from "../contract/Contract";
+import { ContractMessage, ContractResponse } from "../contract/types";
+import { Wallet } from "../wallet/Wallet";
+import { WalletMessage, WalletResponse } from "../wallet/types";
 import { getKitHtml, getNonce } from "./webviewHtml";
 
-/**
- * Provides the Neo Developer Kit webview shown in the side panel.
- */
 export class NeoKitViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "neo.kitView";
 
-  constructor(private readonly extensionUri: vscode.Uri) {}
+  private readonly wallet: Wallet;
+  private readonly contract = new Contract();
+
+  constructor(
+    private readonly extensionUri: vscode.Uri,
+    secrets: vscode.SecretStorage,
+  ) {
+    this.wallet = new Wallet(secrets);
+  }
 
   resolveWebviewView(webviewView: vscode.WebviewView): void {
     const webview = webviewView.webview;
+
     webview.options = {
       enableScripts: true,
       localResourceRoots: [this.extensionUri],
     };
+
     const baseUri = webview
       .asWebviewUri(vscode.Uri.joinPath(this.extensionUri, "media"))
       .toString();
+
     webview.html = getKitHtml(
       this.extensionUri.fsPath,
       webview.cspSource,
       getNonce(),
-      baseUri
+      baseUri,
     );
 
     webview.onDidReceiveMessage(async (message) => {
-      if (!message) {
-        return;
-      }
-      if (message.type === "loadAbi") {
-        await webview.postMessage(await buildAbiResponse(message as ContractInput));
-      } else if (message.type === "invoke") {
-        await webview.postMessage(await buildInvokeResponse(message as InvokeInput));
+      const reply = await this.route(message);
+
+      if (reply) {
+        await webview.postMessage(reply);
       }
     });
+  }
+
+  private route(
+    message: unknown,
+  ): Promise<WalletResponse | ContractResponse> | undefined {
+    if (!message || typeof message !== "object") {
+      return undefined;
+    }
+
+    const type = (message as { type?: unknown }).type;
+    if (typeof type !== "string") {
+      return undefined;
+    }
+
+    if (type.startsWith("wallet.")) {
+      return this.wallet.handle(message as WalletMessage);
+    }
+
+    if (type === "loadAbi" || type === "invoke") {
+      return this.contract.handle(message as ContractMessage);
+    }
+
+    return undefined;
   }
 }

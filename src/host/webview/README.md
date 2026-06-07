@@ -1,40 +1,27 @@
 # Webview (host side)
 
 The **extension-host code that backs the panel**. It runs in Node (not the
-browser), builds the panel's HTML, and answers the messages the UI sends.
+browser), builds the panel's HTML, and routes the messages the UI sends to the
+right domain handler.
 
 It pairs with [`../../renderer`](../../renderer), the React app that runs *inside*
 the webview.
 
 ## Layout
 
-- `neoKitViewProvider.ts` — registers the view, loads the HTML, routes messages.
+- `NeoKitViewProvider.ts` — registers the view, loads the HTML, routes each
+  message to the domain that owns it (`wallet.*` → `Wallet`, contract calls →
+  `handleContractMessage`).
 - `webviewHtml.ts` — builds the panel HTML (asset URLs, CSP, nonce).
-- `messageHandlers.ts` — turns a request into a reply; never throws.
-- `messages.ts` — the reply types sent back to the renderer.
 
 ## Add a new message
 
-When the renderer sends a new request type, answer it here:
+Messages are owned by a domain class in [`..`](..), not by the webview:
 
-1. Write a handler in `messageHandlers.ts` that returns a reply object:
+- Wallet messages live in [`../Wallet.ts`](../Wallet.ts) — add the case in
+  `Wallet.handle` and the variant to `WalletMessage` / `WalletResponse`.
+- Contract messages live in [`../Contract.ts`](../Contract.ts) — add the case in
+  `Contract.handle` and the variant to `ContractMessage` / `ContractResponse`.
 
-   ```ts
-   export async function buildMyResponse(input: MyInput): Promise<MyResponse> {
-     try { return { type: "myReply", ok: true, /* … */ }; }
-     catch (err) { return { type: "myReply", ok: false, error: String(err) }; }
-   }
-   ```
-
-2. Add the reply type in `messages.ts` (and mirror it in
-   [`../../renderer/messages.ts`](../../renderer/messages.ts)).
-3. Route it in `neoKitViewProvider.ts`:
-
-   ```ts
-   if (message.type === "myRequest") {
-     await webview.postMessage(await buildMyResponse(message));
-   }
-   ```
-
-Keep the actual blockchain logic in `../invoke.ts` / `../rpc.ts` — handlers only
-shape the result for the UI.
+Then route the new `type` in `NeoKitViewProvider.route`, and mirror the message /
+response shape in [`../../renderer/messages.ts`](../../renderer/messages.ts).
