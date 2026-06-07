@@ -3,6 +3,7 @@
   "displayName": "neo-developer-kit",
   "description": "Build faster on Neo. The Neo Developer Kit bundles powerful development tools, project templates, deployment utilities, and blockchain integrations into a single package, helping developers go from idea to production with minimal friction.",
   "version": "0.0.1",
+  "license": "GPL-3.0-or-later",
   "engines": {
     "vscode": "^1.94.0"
   },

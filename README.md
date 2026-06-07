@@ -39,3 +39,8 @@ yarn compile
 ```sh
 yarn watch
 ```
+
+## License
+
+This project is open source and licensed under the
+[GNU General Public License v3.0 or later](LICENSE).
