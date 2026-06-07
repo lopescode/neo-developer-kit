@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./media/index.html", "./src/webview/**/*.{ts,tsx}"],
+  content: ["./media/index.html", "./src/renderer/**/*.{ts,tsx}"],
   theme: {
     extend: {
       // Semantic colors mapped to VS Code theme variables, usable as

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export { DEFAULT_RPC_ENDPOINTS } from "./shared/networks";
+export { DEFAULT_RPC_ENDPOINTS } from "../shared/networks";
 
 /**
  * Shape of a Neo `invokefunction` result (the `result` field of the JSON-RPC

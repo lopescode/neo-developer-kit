@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { NeoKitViewProvider } from "./views/neoKitView";
+import { NeoKitViewProvider } from "./webview/neoKitViewProvider";
 
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(

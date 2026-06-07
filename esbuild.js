@@ -37,7 +37,7 @@ async function main() {
 	// Extension host bundle (Node).
 	const extensionCtx = await esbuild.context({
 		...shared,
-		entryPoints: ["src/extension.ts"],
+		entryPoints: ["src/host/extension.ts"],
 		format: "cjs",
 		platform: "node",
 		outfile: "dist/extension.js",
@@ -47,7 +47,7 @@ async function main() {
 	// Webview bundle (browser / React).
 	const webviewCtx = await esbuild.context({
 		...shared,
-		entryPoints: ["src/webview/main.tsx"],
+		entryPoints: ["src/renderer/main.tsx"],
 		format: "iife",
 		platform: "browser",
 		jsx: "automatic",

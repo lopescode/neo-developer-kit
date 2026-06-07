@@ -42,11 +42,11 @@
     "compile": "yarn run check-types && yarn run lint && node esbuild.js && yarn run build:css",
     "watch": "npm-run-all -p watch:*",
     "watch:esbuild": "node esbuild.js --watch",
-    "watch:css": "tailwindcss -i ./src/webview/styles.css -o ./media/css/tailwind.css --watch",
+    "watch:css": "tailwindcss -i ./src/renderer/styles.css -o ./media/css/tailwind.css --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "package": "yarn run check-types && yarn run lint && node esbuild.js --production && yarn run build:css",
-    "build:css": "tailwindcss -i ./src/webview/styles.css -o ./media/css/tailwind.css --minify",
-    "check-types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.webview.json",
+    "build:css": "tailwindcss -i ./src/renderer/styles.css -o ./media/css/tailwind.css --minify",
+    "check-types": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.renderer.json",
     "lint": "eslint src"
   },
   "dependencies": {

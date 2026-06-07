@@ -9,6 +9,6 @@
 		"sourceMap": false,
 		"noEmit": true
 	},
-	"include": ["src/webview", "src/shared"],
+	"include": ["src/renderer", "src/shared"],
 	"exclude": []
 }
