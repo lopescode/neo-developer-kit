@@ -45,7 +45,22 @@ export type WebviewMessage =
   | { type: "wallet.setActive"; address: string }
   | { type: "wallet.remove"; address: string }
   | { type: "wallet.backup" }
-  | { type: "wallet.balance"; address: string; rpc: string };
+  | { type: "wallet.balance"; address: string; rpc: string }
+  | { type: "contract.selectNef" }
+  | { type: "contract.selectManifest" }
+  | {
+      type: "contract.deploy";
+      rpc: string;
+      nefBase64: string;
+      manifestJson: string;
+    }
+  | {
+      type: "contract.update";
+      rpc: string;
+      contract: string;
+      nefBase64: string;
+      manifestJson: string;
+    };
 
 /** The VM result returned by a read-only invocation. */
 export interface InvokeResult {
@@ -67,4 +82,24 @@ export type ExtensionMessage =
   | { type: "wallet.backup"; ok: true; path: string }
   | { type: "wallet.backup"; ok: false; error: string }
   | { type: "wallet.balance"; ok: true; address: string; assets: TokenBalance[] }
-  | { type: "wallet.balance"; ok: false; address: string; error: string };
+  | { type: "wallet.balance"; ok: false; address: string; error: string }
+  | {
+      type: "contract.nef";
+      ok: true;
+      nefName?: string;
+      nefBase64?: string;
+      manifestName?: string;
+      manifestJson?: string;
+    }
+  | { type: "contract.nef"; ok: false; error: string }
+  | {
+      type: "contract.manifest";
+      ok: true;
+      manifestName?: string;
+      manifestJson?: string;
+    }
+  | { type: "contract.manifest"; ok: false; error: string }
+  | { type: "contract.deployed"; ok: true; txid: string; contractHash: string }
+  | { type: "contract.deployed"; ok: false; error: string }
+  | { type: "contract.updated"; ok: true; txid: string }
+  | { type: "contract.updated"; ok: false; error: string };

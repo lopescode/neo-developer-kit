@@ -10,11 +10,11 @@ const TOOLS: Option[] = [
     enabled: true,
   },
   {
-    id: "deploy",
+    id: "contract",
     icon: "⬆",
-    title: "Deploy Contract",
-    desc: "Deploy a compiled NEF to a network.",
-    enabled: false,
+    title: "Manage Contract",
+    desc: "Deploy a new contract or update one in place (same script hash).",
+    enabled: true,
   },
   {
     id: "wallet",

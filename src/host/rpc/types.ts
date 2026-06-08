@@ -53,3 +53,11 @@ export interface Nep17Balances {
   address: string;
   balance: Nep17Balance[];
 }
+
+export interface NeoVersion {
+  protocol: {
+    network: number;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}

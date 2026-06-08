@@ -9,13 +9,14 @@ export class NeoKitViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "neo.kitView";
 
   private readonly wallet: Wallet;
-  private readonly contract = new Contract();
+  private readonly contract: Contract;
 
   constructor(
     private readonly extensionUri: vscode.Uri,
     secrets: vscode.SecretStorage,
   ) {
     this.wallet = new Wallet(secrets);
+    this.contract = new Contract(this.wallet);
   }
 
   resolveWebviewView(webviewView: vscode.WebviewView): void {
@@ -62,7 +63,11 @@ export class NeoKitViewProvider implements vscode.WebviewViewProvider {
       return this.wallet.handle(message as WalletMessage);
     }
 
-    if (type === "loadAbi" || type === "invoke") {
+    if (
+      type === "loadAbi" ||
+      type === "invoke" ||
+      type.startsWith("contract.")
+    ) {
       return this.contract.handle(message as ContractMessage);
     }
 

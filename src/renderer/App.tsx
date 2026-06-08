@@ -5,6 +5,9 @@ import { TestInvoke } from "./screens/TestInvoke";
 import { WalletHub } from "./screens/wallet/WalletHub";
 import { WalletBalance } from "./screens/wallet/WalletBalance";
 import { WalletTransfer } from "./screens/wallet/WalletTransfer";
+import { ContractHub } from "./screens/contract/ContractHub";
+import { DeployContract } from "./screens/contract/DeployContract";
+import { UpdateContract } from "./screens/contract/UpdateContract";
 
 const SCREENS: Record<string, FC> = {
   home: Home,
@@ -12,6 +15,9 @@ const SCREENS: Record<string, FC> = {
   wallet: WalletHub,
   "wallet.balance": WalletBalance,
   "wallet.transfer": WalletTransfer,
+  contract: ContractHub,
+  "contract.deploy": DeployContract,
+  "contract.update": UpdateContract,
 };
 
 function Outlet() {

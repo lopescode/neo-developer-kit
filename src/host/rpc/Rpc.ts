@@ -4,6 +4,7 @@ import {
   ContractState,
   InvokeResult,
   Nep17Balances,
+  NeoVersion,
 } from "./types";
 
 export class Rpc {
@@ -27,6 +28,10 @@ export class Rpc {
 
   getNep17Balances(address: string): Promise<Nep17Balances> {
     return this.call<Nep17Balances>("getnep17balances", [address]);
+  }
+
+  getVersion(): Promise<NeoVersion> {
+    return this.call<NeoVersion>("getversion", []);
   }
 
   private async call<T>(method: string, params: unknown[]): Promise<T> {

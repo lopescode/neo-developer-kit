@@ -39,6 +39,20 @@ export class Wallet {
     }
   }
 
+  async unlockActive(): Promise<Account | undefined> {
+    const wlt = await this.load();
+    const account = wlt.accounts.find((a) => a.isDefault) ?? wlt.accounts[0];
+    if (!account) {
+      throw new Error("No active account. Create or import one first.");
+    }
+    const password = await this.promptPassword(account.label || account.address);
+    if (password === undefined) {
+      return undefined;
+    }
+    await account.decrypt(password);
+    return account;
+  }
+
   private async accounts(): Promise<WalletResponse> {
     const accounts = this.toPublic(await this.load());
     return { type: "wallet.accounts", ok: true, accounts };
@@ -256,6 +270,14 @@ export class Wallet {
       ignoreFocusOut: true,
       prompt: "Account label (optional)",
       placeHolder: "e.g. dev-testnet",
+    });
+  }
+
+  private promptPassword(account: string): Thenable<string | undefined> {
+    return vscode.window.showInputBox({
+      password: true,
+      ignoreFocusOut: true,
+      prompt: `Password for ${account}`,
     });
   }
 
